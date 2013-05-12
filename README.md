@@ -47,16 +47,21 @@ When options are provided, the action applies to all the children of the root wi
 # Examples
 
 Close the focused window:
+
     xdo close
 
 Close all the windows having the same class as the focused window:
+
     xdo close -c
 
 Hide all the windows of the current desktop except the focused window:
+
     xdo hide -dr
 
 Activate the window which ID is 0x800109:
+
     xdo activate 0x800109
 
 Send fake key press/release events with keycode 24 to the focused window:
+
     xdo key -k 24
