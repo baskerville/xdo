@@ -20,6 +20,8 @@ If no window IDs and no options are given, the action applies to the focused win
 
 - `activate`: activate (via EWMH) the window.
 
+- `pid`: print the pid the window on standard output.
+
 - `key`: simulate a key press/release event.
 
 - `button`: simulate a button press/release event.
