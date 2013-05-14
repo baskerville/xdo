@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
         err("No arguments given.\n");
 
-    void (*action) (xcb_window_t win) = NULL;
+    void (*action) (xcb_window_t win);
 
     if (strcmp(argv[1], "close") == 0)
         action = window_close;
@@ -66,9 +66,6 @@ int main(int argc, char *argv[])
                 break;
         }
     }
-
-    if (action == NULL)
-        return EXIT_FAILURE;
 
     int num = argc - optind;
     char **args = argv + optind;
