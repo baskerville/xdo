@@ -43,8 +43,7 @@ int main(int argc, char *argv[])
         err("Unknown action: '%s'.\n", argv[1]);
 
     init();
-    argc--;
-    argv++;
+    argc--, argv++;
     char opt;
     while ((opt = getopt(argc, argv, "rcCdDk:")) != -1) {
         switch (opt) {
@@ -85,7 +84,7 @@ int main(int argc, char *argv[])
                 (*action)(win);
         }
     } else {
-        if (cfg.wid == VALUE_IGNORE && cfg.class == VALUE_IGNORE && cfg.desktop == VALUE_IGNORE) {
+        if (optind < 2 || (cfg.evt_code != XCB_NONE && optind < 3)) {
             xcb_window_t win;
             get_active_window(&win);
             (*action)(win);
@@ -129,6 +128,7 @@ int main(int argc, char *argv[])
 void init(void)
 {
     cfg.class = cfg.desktop = cfg.wid = VALUE_IGNORE;
+    cfg.evt_code = XCB_NONE;
 }
 
 int usage(void)
@@ -258,7 +258,6 @@ void window_pid(xcb_window_t win)
 void fake_input(xcb_window_t win, uint8_t evt, uint8_t code)
 {
     xcb_test_fake_input(dpy, evt, code, XCB_CURRENT_TIME, win, 0, 0, 0);
-    xcb_flush(dpy);
 }
 
 void key_press_release(xcb_window_t win)
