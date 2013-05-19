@@ -81,6 +81,7 @@ int main(int argc, char *argv[])
 
     setup();
 
+    int hits = 0;
     xcb_window_t win = XCB_NONE;
     char class[MAXLEN] = {0};
     uint32_t desktop;
@@ -96,16 +97,21 @@ int main(int argc, char *argv[])
         for (int i = 0; i < num; i++) {
             errno = 0;
             long int w = strtol(args[i], &end, 0);
-            if (errno != 0 || *end != '\0')
+            if (errno != 0 || *end != '\0') {
                 warn("Invalid window ID: '%s'.\n", args[i]);
-            else if (match(w, win, desktop, class))
+            } else if (match(w, win, desktop, class)) {
                 (*action)(w);
+                hits++;
+            }
         }
     } else {
         if (optind < 2 || (cfg.evt_code != XCB_NONE && optind < 3)) {
             xcb_window_t win;
             get_active_window(&win);
-            (*action)(win);
+            if (win != XCB_NONE) {
+                (*action)(win);
+                hits++;
+            }
         } else {
             xcb_query_tree_reply_t *qtr = xcb_query_tree_reply(dpy, xcb_query_tree(dpy, root), NULL);
             if (qtr == NULL)
@@ -114,15 +120,20 @@ int main(int argc, char *argv[])
             xcb_window_t *wins = xcb_query_tree_children(qtr);
             for (int i = 0; i < len; i++) {
                 xcb_window_t w = wins[i];
-                if (match(w, win, desktop, class))
+                if (match(w, win, desktop, class)) {
                     (*action)(w);
+                    hits++;
+                }
             }
             free(qtr);
         }
     }
 
     finish();
-    return EXIT_SUCCESS;
+    if (hits > 0)
+        return EXIT_SUCCESS;
+    else
+        return EXIT_FAILURE;
 }
 
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
