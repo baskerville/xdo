@@ -20,15 +20,17 @@ If no window IDs and no options are given, the action applies to the focused win
 
 - `activate`: activate (via EWMH) the window.
 
-- `pid`: print the pid the window on standard output.
+- `id`: print the window's ID.
+
+- `pid`: print the window's pid.
 
 - `key`: simulate a key press/release event.
 
 - `button`: simulate a button press/release event.
 
-- `-h`: print the synopsis on standard output and exit.
+- `-h`: print the synopsis and exit.
 
-- `-v`: print the version on standard output and exit.
+- `-v`: print the version and exit.
 
 # Options
 

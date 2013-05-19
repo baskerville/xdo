@@ -36,6 +36,7 @@ void window_kill(xcb_window_t);
 void window_hide(xcb_window_t);
 void window_show(xcb_window_t);
 void window_activate(xcb_window_t);
+void window_id(xcb_window_t);
 void window_pid(xcb_window_t);
 void fake_input(xcb_window_t, uint8_t, uint8_t);
 void key_press_release(xcb_window_t);

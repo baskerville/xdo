@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
         action = window_show;
     else if (strcmp(argv[1], "activate") == 0)
         action = window_activate;
+    else if (strcmp(argv[1], "id") == 0)
+        action = window_id;
     else if (strcmp(argv[1], "pid") == 0)
         action = window_pid;
     else if (strcmp(argv[1], "key") == 0)
@@ -253,6 +255,11 @@ void window_activate(xcb_window_t win)
     e.data.data32[1] = XCB_CURRENT_TIME;
 
     xcb_send_event(dpy, false, root, XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT, (char *) &e);
+}
+
+void window_id(xcb_window_t win)
+{
+    printf("0x%X\n", win);
 }
 
 void window_pid(xcb_window_t win)
