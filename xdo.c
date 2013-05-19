@@ -73,15 +73,25 @@ int main(int argc, char *argv[])
 
     setup();
 
+    xcb_window_t win = XCB_NONE;
+    char class[MAXLEN] = {0};
+    uint32_t desktop;
+    if (cfg.wid != VALUE_IGNORE || cfg.class != VALUE_IGNORE)
+        get_active_window(&win);
+    if (cfg.class != VALUE_IGNORE)
+        get_class(win, class, sizeof(class));
+    if (cfg.desktop != VALUE_IGNORE)
+        get_current_desktop(&desktop);
+
     if (num > 0) {
         char *end;
         for (int i = 0; i < num; i++) {
             errno = 0;
-            long int win = strtol(args[i], &end, 0);
+            long int w = strtol(args[i], &end, 0);
             if (errno != 0 || *end != '\0')
                 warn("Invalid window ID: '%s'.\n", args[i]);
-            else
-                (*action)(win);
+            else if (match(w, win, desktop, class))
+                (*action)(w);
         }
     } else {
         if (optind < 2 || (cfg.evt_code != XCB_NONE && optind < 3)) {
@@ -89,32 +99,14 @@ int main(int argc, char *argv[])
             get_active_window(&win);
             (*action)(win);
         } else {
-            xcb_window_t win = XCB_NONE, w = XCB_NONE;
-            char class[MAXLEN] = {0}, c[MAXLEN] = {0};
-            uint32_t desktop, d;
-            if (cfg.wid != VALUE_IGNORE || cfg.class != VALUE_IGNORE)
-                get_active_window(&win);
-            if (cfg.class != VALUE_IGNORE)
-                get_class(win, class, sizeof(class));
-            if (cfg.desktop != VALUE_IGNORE)
-                get_current_desktop(&desktop);
-
             xcb_query_tree_reply_t *qtr = xcb_query_tree_reply(dpy, xcb_query_tree(dpy, root), NULL);
             if (qtr == NULL)
                 err("Failed to query the window tree.\n");
             int len = xcb_query_tree_children_length(qtr);
             xcb_window_t *wins = xcb_query_tree_children(qtr);
             for (int i = 0; i < len; i++) {
-                w = wins[i];
-                if ((cfg.wid == VALUE_IGNORE || (cfg.wid == VALUE_DIFFERENT && w != win)) &&
-                        (cfg.class == VALUE_IGNORE ||
-                         (get_class(w, c, sizeof(c)) &&
-                          ((cfg.class == VALUE_SAME && strcmp(class, c) == 0) ||
-                           (cfg.class == VALUE_DIFFERENT && strcmp(class, c) != 0)))) &&
-                        (cfg.desktop == VALUE_IGNORE ||
-                         (get_desktop(w, &d) &&
-                          ((cfg.desktop == VALUE_SAME && desktop == d) ||
-                           (cfg.desktop == VALUE_DIFFERENT && desktop != d)))))
+                xcb_window_t w = wins[i];
+                if (match(w, win, desktop, class))
                     (*action)(w);
             }
             free(qtr);
@@ -123,6 +115,21 @@ int main(int argc, char *argv[])
 
     finish();
     return EXIT_SUCCESS;
+}
+
+bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
+{
+    char c[MAXLEN] = {0};
+    uint32_t d;
+    return (cfg.wid == VALUE_IGNORE || (cfg.wid == VALUE_DIFFERENT && w != win)) &&
+        (cfg.class == VALUE_IGNORE ||
+         (get_class(w, c, sizeof(c)) &&
+          ((cfg.class == VALUE_SAME && strcmp(class, c) == 0) ||
+           (cfg.class == VALUE_DIFFERENT && strcmp(class, c) != 0)))) &&
+        (cfg.desktop == VALUE_IGNORE ||
+         (get_desktop(w, &d) &&
+          ((cfg.desktop == VALUE_SAME && desktop == d) ||
+           (cfg.desktop == VALUE_DIFFERENT && desktop != d))));
 }
 
 void init(void)

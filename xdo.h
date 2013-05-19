@@ -25,6 +25,7 @@ int usage(void);
 int version(void);
 void setup(void);
 void finish(void);
+bool match(xcb_window_t, xcb_window_t, uint32_t, char*);
 void get_atom(char *, xcb_atom_t *);
 void get_active_window(xcb_window_t *);
 bool get_class(xcb_window_t, char *, size_t);
