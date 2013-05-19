@@ -46,6 +46,10 @@ When options are provided, the action applies to all the children of the root wi
 
 - `-D`: distinct desktop.
 
+- `-n INSTANCE_NAME`: the window has the given instance name.
+
+- `-N CLASS_NAME`: the window has the given class name.
+
 - `-k CODE`: use the given code for the `key` and `button` actions.
 
 # Examples

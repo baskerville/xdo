@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     init();
     argc--, argv++;
     char opt;
-    while ((opt = getopt(argc, argv, "rcCdDk:")) != -1) {
+    while ((opt = getopt(argc, argv, "rcCdDn:N:k:")) != -1) {
         switch (opt) {
             case 'r':
                 cfg.wid = VALUE_DIFFERENT;
@@ -63,6 +63,12 @@ int main(int argc, char *argv[])
                 break;
             case 'D':
                 cfg.desktop = VALUE_DIFFERENT;
+                break;
+            case 'n':
+                cfg.instance_name = optarg;
+                break;
+            case 'N':
+                cfg.class_name = optarg;
                 break;
             case 'k':
                 cfg.evt_code = atoi(optarg);
@@ -121,13 +127,17 @@ int main(int argc, char *argv[])
 
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
 {
-    char c[MAXLEN] = {0};
+    char c[MAXLEN] = {0}, i[MAXLEN] = {0};
     uint32_t d;
     return (cfg.wid == VALUE_IGNORE || (cfg.wid == VALUE_DIFFERENT && w != win)) &&
         (cfg.class == VALUE_IGNORE ||
          (get_class(w, c, sizeof(c)) &&
           ((cfg.class == VALUE_SAME && strcmp(class, c) == 0) ||
            (cfg.class == VALUE_DIFFERENT && strcmp(class, c) != 0)))) &&
+        (cfg.class_name == NULL || (get_class(w, c, sizeof(c))
+                                    && strcmp(cfg.class_name, c) == 0)) &&
+        (cfg.instance_name == NULL || (get_instance(w, i, sizeof(i))
+                                       && strcmp(cfg.instance_name, i) == 0)) &&
         (cfg.desktop == VALUE_IGNORE ||
          (get_desktop(w, &d) &&
           ((cfg.desktop == VALUE_SAME && desktop == d) ||
@@ -137,6 +147,7 @@ bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
 void init(void)
 {
     cfg.class = cfg.desktop = cfg.wid = VALUE_IGNORE;
+    cfg.class_name = cfg.instance_name = NULL;
     cfg.evt_code = XCB_NONE;
 }
 
@@ -195,6 +206,17 @@ bool get_class(xcb_window_t win, char *class, size_t len)
     xcb_icccm_get_wm_class_reply_t icr;
     if (xcb_icccm_get_wm_class_reply(dpy, xcb_icccm_get_wm_class(dpy, win), &icr, NULL) == 1) {
         strncpy(class, icr.class_name, len);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool get_instance(xcb_window_t win, char *instance, size_t len)
+{
+    xcb_icccm_get_wm_class_reply_t icr;
+    if (xcb_icccm_get_wm_class_reply(dpy, xcb_icccm_get_wm_class(dpy, win), &icr, NULL) == 1) {
+        strncpy(instance, icr.instance_name, len);
         return true;
     } else {
         return false;
