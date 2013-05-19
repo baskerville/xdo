@@ -13,6 +13,7 @@ typedef struct {
     value_cmp_t desktop;
     char *class_name;
     char *instance_name;
+    uint32_t pid;
     uint8_t evt_code;
 } config_t;
 
@@ -32,6 +33,7 @@ void get_atom(char *, xcb_atom_t *);
 void get_active_window(xcb_window_t *);
 bool get_class(xcb_window_t, char *, size_t);
 bool get_instance(xcb_window_t, char *, size_t);
+bool get_pid(xcb_window_t win, uint32_t *);
 bool get_desktop(xcb_window_t, uint32_t *);
 bool get_current_desktop(uint32_t *);
 void window_close(xcb_window_t);

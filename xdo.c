@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     init();
     argc--, argv++;
     char opt;
-    while ((opt = getopt(argc, argv, "rcCdDn:N:k:")) != -1) {
+    while ((opt = getopt(argc, argv, "rcCdDn:N:p:k:")) != -1) {
         switch (opt) {
             case 'r':
                 cfg.wid = VALUE_DIFFERENT;
@@ -69,6 +69,9 @@ int main(int argc, char *argv[])
                 break;
             case 'N':
                 cfg.class_name = optarg;
+                break;
+            case 'p':
+                cfg.pid = atoi(optarg);
                 break;
             case 'k':
                 cfg.evt_code = atoi(optarg);
@@ -139,7 +142,7 @@ int main(int argc, char *argv[])
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
 {
     char c[MAXLEN] = {0}, i[MAXLEN] = {0};
-    uint32_t d;
+    uint32_t d, p;
     return (cfg.wid == VALUE_IGNORE || (cfg.wid == VALUE_DIFFERENT && w != win)) &&
         (cfg.class == VALUE_IGNORE ||
          (get_class(w, c, sizeof(c)) &&
@@ -149,6 +152,7 @@ bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
                                     && strcmp(cfg.class_name, c) == 0)) &&
         (cfg.instance_name == NULL || (get_instance(w, i, sizeof(i))
                                        && strcmp(cfg.instance_name, i) == 0)) &&
+        (cfg.pid == 0 || (get_pid(w, &p) && p == cfg.pid)) &&
         (cfg.desktop == VALUE_IGNORE ||
          (get_desktop(w, &d) &&
           ((cfg.desktop == VALUE_SAME && desktop == d) ||
@@ -159,6 +163,7 @@ void init(void)
 {
     cfg.class = cfg.desktop = cfg.wid = VALUE_IGNORE;
     cfg.class_name = cfg.instance_name = NULL;
+    cfg.pid = 0;
     cfg.evt_code = XCB_NONE;
 }
 
@@ -234,6 +239,11 @@ bool get_instance(xcb_window_t win, char *instance, size_t len)
     }
 }
 
+bool get_pid(xcb_window_t win, uint32_t *pid)
+{
+    return (xcb_ewmh_get_wm_pid_reply(ewmh, xcb_ewmh_get_wm_pid(ewmh, win), pid, NULL) == 1);
+}
+
 bool get_desktop(xcb_window_t win, uint32_t *desktop)
 {
     return (xcb_ewmh_get_wm_desktop_reply(ewmh, xcb_ewmh_get_wm_desktop(ewmh, win), desktop, NULL) == 1);
@@ -298,7 +308,7 @@ void window_id(xcb_window_t win)
 void window_pid(xcb_window_t win)
 {
     uint32_t pid;
-    if (xcb_ewmh_get_wm_pid_reply(ewmh, xcb_ewmh_get_wm_pid(ewmh, win), &pid, NULL) == 1)
+    if (get_pid(win, &pid))
         printf("%i\n", pid);
 }
 

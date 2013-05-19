@@ -50,6 +50,8 @@ When options are provided, the action applies to all the children of the root wi
 
 - `-N CLASS_NAME`: the window has the given class name.
 
+- `-p PID`: the window has the given pid.
+
 - `-k CODE`: use the given code for the `key` and `button` actions.
 
 # Examples
