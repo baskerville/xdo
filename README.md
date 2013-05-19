@@ -18,7 +18,7 @@ If no window IDs and no options are given, the action applies to the focused win
 
 - `show`: map the window.
 
-- `activate`: activate (via EWMH) the window.
+- `activate`: activate the window.
 
 - `id`: print the window's ID.
 
