@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     init();
     argc--, argv++;
     char opt;
-    while ((opt = getopt(argc, argv, "rcCdDn:N:p:k:")) != -1) {
+    while ((opt = getopt(argc, argv, "rcCdDn:N:p:k:s")) != -1) {
         switch (opt) {
             case 'r':
                 cfg.wid = VALUE_DIFFERENT;
@@ -75,6 +75,9 @@ int main(int argc, char *argv[])
                 break;
             case 'k':
                 cfg.evt_code = atoi(optarg);
+                break;
+            case 's':
+                cfg.symb_desks = true;
                 break;
         }
     }
@@ -155,8 +158,8 @@ bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)
         (cfg.pid == 0 || (get_pid(w, &p) && p == cfg.pid)) &&
         (cfg.desktop == VALUE_IGNORE ||
          (get_desktop(w, &d) &&
-          ((cfg.desktop == VALUE_SAME && desktop == d) ||
-           (cfg.desktop == VALUE_DIFFERENT && desktop != d))));
+          ((cfg.desktop == VALUE_SAME && DESKEQ(desktop, d)) ||
+           (cfg.desktop == VALUE_DIFFERENT && !DESKEQ(desktop, d)))));
 }
 
 void init(void)
@@ -165,6 +168,7 @@ void init(void)
     cfg.class_name = cfg.instance_name = NULL;
     cfg.pid = 0;
     cfg.evt_code = XCB_NONE;
+    cfg.symb_desks = false;
 }
 
 int usage(void)
@@ -246,7 +250,7 @@ bool get_pid(xcb_window_t win, uint32_t *pid)
 
 bool get_desktop(xcb_window_t win, uint32_t *desktop)
 {
-    return (xcb_ewmh_get_wm_desktop_reply(ewmh, xcb_ewmh_get_wm_desktop(ewmh, win), desktop, NULL) == 1);
+    return (xcb_ewmh_get_wm_desktop_reply(ewmh, xcb_ewmh_get_wm_desktop(ewmh, win), desktop, NULL) == 1 && (*desktop != ALL_DESKS || cfg.symb_desks));
 }
 
 bool get_current_desktop(uint32_t *desktop)

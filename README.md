@@ -54,6 +54,8 @@ When options are provided, the action applies to all the children of the root wi
 
 - `-k CODE`: use the given code for the `key` and `button` actions.
 
+- `-s`: handle symbolic desktop numbers.
+
 # Examples
 
 Close the focused window:

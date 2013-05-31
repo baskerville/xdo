@@ -1,6 +1,9 @@
 #ifndef _XDO_H
 #define _XDO_H
 
+#define ALL_DESKS      0xFFFFFFFF
+#define DESKEQ(d1,d2)  (d1 == d2 || (cfg.symb_desks && (d1 == ALL_DESKS || d2 == ALL_DESKS)))
+
 typedef enum {
     VALUE_IGNORE,
     VALUE_SAME,
@@ -15,6 +18,7 @@ typedef struct {
     char *instance_name;
     uint32_t pid;
     uint8_t evt_code;
+    bool symb_desks;
 } config_t;
 
 xcb_connection_t *dpy;
