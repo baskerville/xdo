@@ -1,0 +1,173 @@
+.TH XDO 1 "June 20, 2013" "Xdo"
+.SH NAME
+xdo - Perform actions on windows
+.SH SYNOPSIS
+.PP
+\f[B]xdo\f[] \f[I]ACTION\f[] [\f[I]OPTIONS\f[]] [\f[I]WID\f[] ...]
+.SH DESCRIPTION
+.PP
+Apply the given action to the given windows.
+.PP
+If no window IDs and no options are given, the action applies to the
+focused window.
+.SH ACTIONS
+.TP
+.B \f[B]close\f[]
+Close the window.
+.RS
+.RE
+.TP
+.B \f[B]kill\f[]
+Kill the client.
+.RS
+.RE
+.TP
+.B \f[B]hide\f[]
+Unmap the window.
+.RS
+.RE
+.TP
+.B \f[B]show\f[]
+Map the window.
+.RS
+.RE
+.TP
+.B \f[B]activate\f[]
+Activate the window.
+.RS
+.RE
+.TP
+.B \f[B]id\f[]
+Print the window\[aq]s ID.
+.RS
+.RE
+.TP
+.B \f[B]pid\f[]
+Print the window\[aq]s pid.
+.RS
+.RE
+.TP
+.B \f[B]key\f[]
+Simulate a key press/release event.
+.RS
+.RE
+.TP
+.B \f[B]button\f[]
+Simulate a button press/release event.
+.RS
+.RE
+.TP
+.B \f[B]\-h\f[]
+Print the synopsis and exit.
+.RS
+.RE
+.TP
+.B \f[B]\-v\f[]
+Print the version and exit.
+.RS
+.RE
+.SH OPTIONS
+.PP
+When options are provided, the action applies to all the children of the
+root window that match the comparisons implied by the options in
+relation to the focused window.
+.TP
+.B \f[B]\-r\f[]
+Distinct ID.
+.RS
+.RE
+.TP
+.B \f[B]\-c\f[]
+Same class.
+.RS
+.RE
+.TP
+.B \f[B]\-C\f[]
+Distinct class.
+.RS
+.RE
+.TP
+.B \f[B]\-d\f[]
+Same desktop.
+.RS
+.RE
+.TP
+.B \f[B]\-D\f[]
+Distinct desktop.
+.RS
+.RE
+.TP
+.B \f[B]\-n\f[] \f[I]INSTANCE_NAME\f[]
+The window has the given instance name.
+.RS
+.RE
+.TP
+.B \f[B]\-N\f[] \f[I]CLASS_NAME\f[]
+The window has the given class name.
+.RS
+.RE
+.TP
+.B \f[B]\-p\f[] \f[I]PID\f[]
+The window has the given pid.
+.RS
+.RE
+.TP
+.B \f[B]\-k\f[] \f[I]CODE\f[]
+Use the given code for the \f[B]key\f[] and \f[B]button\f[] actions.
+.RS
+.RE
+.TP
+.B \f[B]\-s\f[]
+Handle symbolic desktop numbers.
+.RS
+.RE
+.SH EXAMPLES
+.PP
+Close the focused window:
+.IP
+.nf
+\f[C]
+xdo\ close
+\f[]
+.fi
+.PP
+Close all the windows having the same class as the focused window:
+.IP
+.nf
+\f[C]
+xdo\ close\ \-c
+\f[]
+.fi
+.PP
+Hide all the windows of the current desktop except the focused window:
+.IP
+.nf
+\f[C]
+xdo\ hide\ \-dr
+\f[]
+.fi
+.PP
+Activate the window which ID is 0x800109:
+.IP
+.nf
+\f[C]
+xdo\ activate\ 0x800109
+\f[]
+.fi
+.PP
+Send fake key press/release events with keycode 24 to the focused
+window:
+.IP
+.nf
+\f[C]
+xdo\ key\ \-k\ 24
+\f[]
+.fi
+.SH AUTHOR
+.MT baskerville@lavabit.com
+Bastien Dejean
+.ME
+.SH LINKS
+.UR https://github.com/baskerville/xdo
+Homepage
+.UE

@@ -8,6 +8,7 @@ LDFLAGS  = -L$(PREFIX)/lib
 
 PREFIX    ?= /usr/local
 BINPREFIX  = $(PREFIX)/bin
+MANPREFIX = $(PREFIX)/share/man
 
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
@@ -32,11 +33,19 @@ xdo: $(OBJ)
 install:
 	mkdir -p "$(DESTDIR)$(BINPREFIX)"
 	cp -p xdo "$(DESTDIR)$(BINPREFIX)"
+	mkdir -p "$(DESTDIR)$(MANPREFIX)/man1"
+	cp -p xdo.1 "$(DESTDIR)$(MANPREFIX)/man1"
 
 uninstall:
 	rm -f "$(DESTDIR)$(BINPREFIX)/xdo"
+	rm -f $(DESTDIR)$(MANPREFIX)/man1/xdo.1
+
+doc:
+	pandoc -t json doc/README | runhaskell doc/capitalize_headers.hs | pandoc -f json -t man --template doc/xdo.1.template -o xdo.1
+	pandoc -f markdown -t rst doc/README -o README.rst
+	patch -p 1 -i doc/missed_emph.patch
 
 clean:
 	rm -f $(OBJ) xdo
 
-.PHONY: all debug clean install uninstall
+.PHONY: all debug install uninstall doc clean

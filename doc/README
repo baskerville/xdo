@@ -1,0 +1,104 @@
+% Xdo User's Guide
+% Bastien Dejean
+% June 20, 2013
+
+# Synopsis
+
+**xdo** *ACTION* [*OPTIONS*] [*WID* ...]
+
+# Description
+
+Apply the given action to the given windows.
+
+If no window IDs and no options are given, the action applies to the focused window.
+
+# Actions
+
+**close**
+:    Close the window.
+
+**kill**
+:    Kill the client.
+
+**hide**
+:    Unmap the window.
+
+**show**
+:    Map the window.
+
+**activate**
+:    Activate the window.
+
+**id**
+:    Print the window's ID.
+
+**pid**
+:    Print the window's pid.
+
+**key**
+:    Simulate a key press/release event.
+
+**button**
+:    Simulate a button press/release event.
+
+**-h**
+:    Print the synopsis and exit.
+
+**-v**
+:    Print the version and exit.
+
+# Options
+
+When options are provided, the action applies to all the children of the root window that match the comparisons implied by the options in relation to the focused window.
+
+**-r**
+:    Distinct ID.
+
+**-c**
+:    Same class.
+
+**-C**
+:    Distinct class.
+
+**-d**
+:    Same desktop.
+
+**-D**
+:    Distinct desktop.
+
+**-n** *INSTANCE_NAME*
+:    The window has the given instance name.
+
+**-N** *CLASS_NAME*
+:    The window has the given class name.
+
+**-p** *PID*
+:    The window has the given pid.
+
+**-k** *CODE*
+:    Use the given code for the **key** and **button** actions.
+
+**-s**
+:    Handle symbolic desktop numbers.
+
+# Examples
+
+Close the focused window:
+
+    xdo close
+
+Close all the windows having the same class as the focused window:
+
+    xdo close -c
+
+Hide all the windows of the current desktop except the focused window:
+
+    xdo hide -dr
+
+Activate the window which ID is 0x800109:
+
+    xdo activate 0x800109
+
+Send fake key press/release events with keycode 24 to the focused window:
+
+    xdo key -k 24

@@ -1,0 +1,24 @@
+diff -ru a/README.rst b/README.rst
+--- a/README.rst	2013-06-20 15:59:32.058730535 +0200
++++ b/README.rst	2013-06-20 16:01:20.008309530 +0200
+@@ -1,7 +1,7 @@
+ Synopsis
+ ========
+ 
+-**xdo** *ACTION* [*OPTIONS*\ ][\*WID\* ...]
++**xdo** *ACTION* [*OPTIONS*] [*WID* ...]
+ 
+ Description
+ ===========
+diff -ru a/xdo.1 b/xdo.1
+--- a/xdo.1	2013-06-20 15:59:32.058730535 +0200
++++ b/xdo.1	2013-06-20 16:01:17.584985648 +0200
+@@ -3,7 +3,7 @@
+ xdo - Perform actions on windows
+ .SH SYNOPSIS
+ .PP
+-\f[B]xdo\f[] \f[I]ACTION\f[] [\f[I]OPTIONS\f[]][*WID* ...]
++\f[B]xdo\f[] \f[I]ACTION\f[] [\f[I]OPTIONS\f[]] [\f[I]WID\f[] ...]
+ .SH DESCRIPTION
+ .PP
+ Apply the given action to the given windows.
