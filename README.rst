@@ -14,37 +14,37 @@ focused window.
 Actions
 =======
 
-**close**
+``close``
     Close the window.
 
-**kill**
+``kill``
     Kill the client.
 
-**hide**
+``hide``
     Unmap the window.
 
-**show**
+``show``
     Map the window.
 
-**activate**
+``activate``
     Activate the window.
 
-**id**
+``id``
     Print the window's ID.
 
-**pid**
+``pid``
     Print the window's pid.
 
-**key**
+``key``
     Simulate a key press/release event.
 
-**button**
+``button``
     Simulate a button press/release event.
 
-**-h**
+``-h``
     Print the synopsis and exit.
 
-**-v**
+``-v``
     Print the version and exit.
 
 Options
@@ -54,34 +54,34 @@ When options are provided, the action applies to all the children of the
 root window that match the comparisons implied by the options in
 relation to the focused window.
 
-**-r**
+``-r``
     Distinct ID.
 
-**-c**
+``-c``
     Same class.
 
-**-C**
+``-C``
     Distinct class.
 
-**-d**
+``-d``
     Same desktop.
 
-**-D**
+``-D``
     Distinct desktop.
 
-**-n** *INSTANCE\_NAME*
+``-n`` *INSTANCE\_NAME*
     The window has the given instance name.
 
-**-N** *CLASS\_NAME*
+``-N`` *CLASS\_NAME*
     The window has the given class name.
 
-**-p** *PID*
+``-p`` *PID*
     The window has the given pid.
 
-**-k** *CODE*
-    Use the given code for the **key** and **button** actions.
+``-k`` *CODE*
+    Use the given code for the ``key`` and ``button`` actions.
 
-**-s**
+``-s``
     Handle symbolic desktop numbers.
 
 Examples
