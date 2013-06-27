@@ -1,0 +1,213 @@
+'\" t
+.\"     Title: xdo
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/27/2013
+.\"    Manual: Xdo Manual
+.\"    Source: Xdo 0.1
+.\"  Language: English
+.\"
+.TH "XDO" "1" "06/27/2013" "Xdo 0\&.1" "Xdo Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+xdo \- Perform actions on windows
+.SH "SYNOPSIS"
+.sp
+\fBxdo\fR \fIACTION\fR [\fIOPTIONS\fR] [\fIWID\fR \&...]
+.SH "DESCRIPTION"
+.sp
+Apply the given action to the given windows\&.
+.sp
+If no window IDs and no options are given, the action applies to the focused window\&.
+.SH "ACTIONS"
+.PP
+\fBclose\fR
+.RS 4
+Close the window\&.
+.RE
+.PP
+\fBkill\fR
+.RS 4
+Kill the client\&.
+.RE
+.PP
+\fBhide\fR
+.RS 4
+Unmap the window\&.
+.RE
+.PP
+\fBshow\fR
+.RS 4
+Map the window\&.
+.RE
+.PP
+\fBactivate\fR
+.RS 4
+Activate the window\&.
+.RE
+.PP
+\fBid\fR
+.RS 4
+Print the window\(cqs ID\&.
+.RE
+.PP
+\fBpid\fR
+.RS 4
+Print the window\(cqs pid\&.
+.RE
+.PP
+\fBkey\fR
+.RS 4
+Simulate a key press/release event\&.
+.RE
+.PP
+\fBbutton\fR
+.RS 4
+Simulate a button press/release event\&.
+.RE
+.PP
+\fB\-h\fR
+.RS 4
+Print the synopsis and exit\&.
+.RE
+.PP
+\fB\-v\fR
+.RS 4
+Print the version and exit\&.
+.RE
+.SH "OPTIONS"
+.sp
+When options are provided, the action applies to all the children of the root window that match the comparisons implied by the options in relation to the focused window\&.
+.PP
+\fB\-r\fR
+.RS 4
+Distinct ID\&.
+.RE
+.PP
+\fB\-c\fR
+.RS 4
+Same class\&.
+.RE
+.PP
+\fB\-C\fR
+.RS 4
+Distinct class\&.
+.RE
+.PP
+\fB\-d\fR
+.RS 4
+Same desktop\&.
+.RE
+.PP
+\fB\-D\fR
+.RS 4
+Distinct desktop\&.
+.RE
+.PP
+\fB\-n\fR \fIINSTANCE_NAME\fR
+.RS 4
+The window has the given instance name\&.
+.RE
+.PP
+\fB\-N\fR \fICLASS_NAME\fR
+.RS 4
+The window has the given class name\&.
+.RE
+.PP
+\fB\-p\fR \fIPID\fR
+.RS 4
+The window has the given pid\&.
+.RE
+.PP
+\fB\-k\fR \fICODE\fR
+.RS 4
+Use the given code for the
+\fBkey\fR
+and
+\fBbutton\fR
+actions\&.
+.RE
+.PP
+\fB\-s\fR
+.RS 4
+Handle symbolic desktop numbers\&.
+.RE
+.SH "EXAMPLES"
+.sp
+Close the focused window:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xdo close
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Close all the windows having the same class as the focused window:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xdo close \-c
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Hide all the windows of the current desktop except the focused window:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xdo hide \-dr
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Activate the window which ID is 0x800109:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xdo activate 0x800109
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Send fake key press/release events with keycode 24 to the focused window:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xdo key \-k 24
+.fi
+.if n \{\
+.RE
+.\}

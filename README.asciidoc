@@ -1,0 +1,1 @@
+doc/xdo.1.txt
