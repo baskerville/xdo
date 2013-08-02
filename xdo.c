@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     int hits = 0;
     xcb_window_t win = XCB_NONE;
     char class[MAXLEN] = {0};
-    uint32_t desktop;
+    uint32_t desktop = 0;
     if (cfg.wid != VALUE_IGNORE || cfg.class != VALUE_IGNORE)
         get_active_window(&win);
     if (cfg.class != VALUE_IGNORE)
