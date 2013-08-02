@@ -3,9 +3,9 @@ VERSION = 0.2
 
 CC       = gcc
 LIBS     = -lm -lxcb -lxcb-icccm -lxcb-ewmh -lxcb-xtest
-CFLAGS   = -std=c99 -pedantic -Wall -Wextra -I$(PREFIX)/include
+CFLAGS  += -std=c99 -pedantic -Wall -Wextra -I$(PREFIX)/include
 CFLAGS  += -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
-LDFLAGS  = -L$(PREFIX)/lib
+LDFLAGS += -L$(PREFIX)/lib
 
 PREFIX    ?= /usr/local
 BINPREFIX  = $(PREFIX)/bin
