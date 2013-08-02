@@ -9,7 +9,7 @@ LDFLAGS += -L$(PREFIX)/lib
 
 PREFIX    ?= /usr/local
 BINPREFIX  = $(PREFIX)/bin
-MANPREFIX = $(PREFIX)/share/man
+MANPREFIX  = $(PREFIX)/share/man
 
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
