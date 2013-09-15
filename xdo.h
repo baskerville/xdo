@@ -44,6 +44,8 @@ void window_close(xcb_window_t);
 void window_kill(xcb_window_t);
 void window_hide(xcb_window_t);
 void window_show(xcb_window_t);
+void window_raise(xcb_window_t);
+void window_lower(xcb_window_t);
 void window_activate(xcb_window_t);
 void window_id(xcb_window_t);
 void window_pid(xcb_window_t);

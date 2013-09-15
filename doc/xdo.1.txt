@@ -37,6 +37,12 @@ Actions
 *show*::
   Map the window.
 
+*raise*::
+  Raise the window.
+
+*lower*::
+  Lower the window.
+
 *activate*::
   Activate the window.
 

@@ -19,20 +19,24 @@ int main(int argc, char *argv[])
 
     void (*action) (xcb_window_t win);
 
-    if (strcmp(argv[1], "close") == 0)
-        action = window_close;
-    else if (strcmp(argv[1], "kill") == 0)
-        action = window_kill;
+    if (strcmp(argv[1], "id") == 0)
+        action = window_id;
+    else if (strcmp(argv[1], "pid") == 0)
+        action = window_pid;
+    else if (strcmp(argv[1], "activate") == 0)
+        action = window_activate;
     else if (strcmp(argv[1], "hide") == 0)
         action = window_hide;
     else if (strcmp(argv[1], "show") == 0)
         action = window_show;
-    else if (strcmp(argv[1], "activate") == 0)
-        action = window_activate;
-    else if (strcmp(argv[1], "id") == 0)
-        action = window_id;
-    else if (strcmp(argv[1], "pid") == 0)
-        action = window_pid;
+    else if (strcmp(argv[1], "close") == 0)
+        action = window_close;
+    else if (strcmp(argv[1], "kill") == 0)
+        action = window_kill;
+    else if (strcmp(argv[1], "raise") == 0)
+        action = window_raise;
+    else if (strcmp(argv[1], "lower") == 0)
+        action = window_lower;
     else if (strcmp(argv[1], "key") == 0)
         action = key_press_release;
     else if (strcmp(argv[1], "button") == 0)
@@ -288,6 +292,18 @@ void window_hide(xcb_window_t win)
 void window_show(xcb_window_t win)
 {
     xcb_map_window(dpy, win);
+}
+
+void window_raise(xcb_window_t win)
+{
+    uint32_t values[] = {XCB_STACK_MODE_ABOVE};
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
+}
+
+void window_lower(xcb_window_t win)
+{
+    uint32_t values[] = {XCB_STACK_MODE_BELOW};
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
 
 void window_activate(xcb_window_t win)
