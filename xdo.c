@@ -329,10 +329,12 @@ void window_lower(xcb_window_t win)
     if (cfg.v != NULL) { \
         uint32_t v = atoi(cfg.v); \
         if (ISRELA(cfg.v)) \
-            values[i++] += v; \
+            values[i] += v; \
         else \
-            values[i++] = v; \
-    }
+            values[i] = v; \
+    } \
+    i++;
+
 
 void window_move(xcb_window_t win)
 {
