@@ -13,7 +13,7 @@ xdo - Perform actions on windows
 Synopsis
 --------
 
-*xdo* _ACTION_ [_OPTIONS_] [_WID_ ...]
+*xdo* 'ACTION' ['OPTIONS'] ['WID' ...]
 
 Description
 -----------
@@ -42,6 +42,12 @@ Actions
 
 *lower*::
   Lower the window.
+
+*move*::
+  Move the window.
+
+*resize*::
+  Resize the window.
 
 *activate*::
   Activate the window.
@@ -84,17 +90,29 @@ When options are provided, the action applies to all the children of the root wi
 *-D*::
   Distinct desktop.
 
-*-n* _INSTANCE_NAME_::
+*-n* 'INSTANCE_NAME'::
   The window has the given instance name.
 
-*-N* _CLASS_NAME_::
+*-N* 'CLASS_NAME'::
   The window has the given class name.
 
-*-p* _PID_::
+*-p* 'PID'::
   The window has the given pid.
 
-*-k* _CODE_::
+*-k* 'CODE'::
   Use the given code for the *key* and *button* actions.
+
+*-x* '[±]PIXELS'::
+  Window x coordinate (or delta) for the *move* action.
+
+*-y* '[±]PIXELS'::
+  Window y coordinate (or delta) for the *move* action.
+
+*-w* '[±]PIXELS'::
+  Window width (or delta) for the *resize* action.
+
+*-h* '[±]PIXELS'::
+  Window height (or delta) for the *resize* action.
 
 *-s*::
   Handle symbolic desktop numbers.

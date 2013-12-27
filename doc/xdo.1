@@ -2,12 +2,12 @@
 .\"     Title: xdo
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 09/15/2013
+.\"      Date: 12/28/2013
 .\"    Manual: Xdo Manual
 .\"    Source: Xdo 0.2
 .\"  Language: English
 .\"
-.TH "XDO" "1" "09/15/2013" "Xdo 0\&.2" "Xdo Manual"
+.TH "XDO" "1" "12/28/2013" "Xdo 0\&.2" "Xdo Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -67,6 +67,16 @@ Raise the window\&.
 \fBlower\fR
 .RS 4
 Lower the window\&.
+.RE
+.PP
+\fBmove\fR
+.RS 4
+Move the window\&.
+.RE
+.PP
+\fBresize\fR
+.RS 4
+Resize the window\&.
 .RE
 .PP
 \fBactivate\fR
@@ -154,6 +164,34 @@ Use the given code for the
 and
 \fBbutton\fR
 actions\&.
+.RE
+.PP
+\fB\-x\fR \fI[\(+-]PIXELS\fR
+.RS 4
+Window x coordinate (or delta) for the
+\fBmove\fR
+action\&.
+.RE
+.PP
+\fB\-y\fR \fI[\(+-]PIXELS\fR
+.RS 4
+Window y coordinate (or delta) for the
+\fBmove\fR
+action\&.
+.RE
+.PP
+\fB\-w\fR \fI[\(+-]PIXELS\fR
+.RS 4
+Window width (or delta) for the
+\fBresize\fR
+action\&.
+.RE
+.PP
+\fB\-h\fR \fI[\(+-]PIXELS\fR
+.RS 4
+Window height (or delta) for the
+\fBresize\fR
+action\&.
 .RE
 .PP
 \fB\-s\fR

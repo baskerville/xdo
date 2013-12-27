@@ -3,9 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
-#include <ctype.h>
 #include <errno.h>
-#include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_ewmh.h>
 #include <xcb/xtest.h>
@@ -29,6 +27,10 @@ int main(int argc, char *argv[])
         action = window_hide;
     else if (strcmp(argv[1], "show") == 0)
         action = window_show;
+    else if (strcmp(argv[1], "move") == 0)
+        action = window_move;
+    else if (strcmp(argv[1], "resize") == 0)
+        action = window_resize;
     else if (strcmp(argv[1], "close") == 0)
         action = window_close;
     else if (strcmp(argv[1], "kill") == 0)
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
     init();
     argc--, argv++;
     char opt;
-    while ((opt = getopt(argc, argv, "rcCdDn:N:p:k:s")) != -1) {
+    while ((opt = getopt(argc, argv, "rcCdDn:N:p:k:sx:y:h:w:")) != -1) {
         switch (opt) {
             case 'r':
                 cfg.wid = VALUE_DIFFERENT;
@@ -82,6 +84,18 @@ int main(int argc, char *argv[])
                 break;
             case 's':
                 cfg.symb_desks = true;
+                break;
+            case 'x':
+                cfg.x = optarg;
+                break;
+            case 'y':
+                cfg.y = optarg;
+                break;
+            case 'w':
+                cfg.width = optarg;
+                break;
+            case 'h':
+                cfg.height = optarg;
                 break;
         }
     }
@@ -115,7 +129,11 @@ int main(int argc, char *argv[])
             }
         }
     } else {
-        if (optind < 2 || (cfg.evt_code != XCB_NONE && optind < 3)) {
+        if (cfg.class == VALUE_IGNORE
+                && cfg.desktop == VALUE_IGNORE
+                && cfg.class_name == NULL
+                && cfg.instance_name == NULL
+                && cfg.pid == 0) {
             xcb_window_t win;
             get_active_window(&win);
             if (win != XCB_NONE) {
@@ -170,6 +188,7 @@ void init(void)
 {
     cfg.class = cfg.desktop = cfg.wid = VALUE_IGNORE;
     cfg.class_name = cfg.instance_name = NULL;
+    cfg.x = cfg.y = cfg.width = cfg.height = NULL;
     cfg.pid = 0;
     cfg.evt_code = XCB_NONE;
     cfg.symb_desks = false;
@@ -305,6 +324,45 @@ void window_lower(xcb_window_t win)
     uint32_t values[] = {XCB_STACK_MODE_BELOW};
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
+
+#define HANDLE_COORD(v) \
+    if (cfg.v != NULL) { \
+        uint32_t v = atoi(cfg.v); \
+        if (ISRELA(cfg.v)) \
+            values[i++] += v; \
+        else \
+            values[i++] = v; \
+    }
+
+void window_move(xcb_window_t win)
+{
+    xcb_get_geometry_reply_t *geo = xcb_get_geometry_reply(dpy, xcb_get_geometry(dpy, win), NULL);
+    if (geo == NULL)
+        return;
+    uint32_t values[2] = {geo->x, geo->y};
+    int i = 0;
+    HANDLE_COORD(x)
+    HANDLE_COORD(y)
+    if (i == 0)
+        return;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
+}
+
+void window_resize(xcb_window_t win)
+{
+    xcb_get_geometry_reply_t *geo = xcb_get_geometry_reply(dpy, xcb_get_geometry(dpy, win), NULL);
+    if (geo == NULL)
+        return;
+    uint32_t values[2] = {geo->width, geo->height};
+    int i = 0;
+    HANDLE_COORD(width)
+    HANDLE_COORD(height)
+    if (i == 0)
+        return;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+}
+
+#undef HANDLE_COORD
 
 void window_activate(xcb_window_t win)
 {
