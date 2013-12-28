@@ -325,7 +325,7 @@ void window_lower(xcb_window_t win)
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
 
-#define HANDLE_COORD(v) \
+#define SETGEOM(v) \
     if (cfg.v != NULL) { \
         uint32_t v = atoi(cfg.v); \
         if (ISRELA(cfg.v)) \
@@ -343,10 +343,8 @@ void window_move(xcb_window_t win)
         return;
     uint32_t values[2] = {geo->x, geo->y};
     int i = 0;
-    HANDLE_COORD(x)
-    HANDLE_COORD(y)
-    if (i == 0)
-        return;
+    SETGEOM(x)
+    SETGEOM(y)
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
 }
 
@@ -357,14 +355,12 @@ void window_resize(xcb_window_t win)
         return;
     uint32_t values[2] = {geo->width, geo->height};
     int i = 0;
-    HANDLE_COORD(width)
-    HANDLE_COORD(height)
-    if (i == 0)
-        return;
+    SETGEOM(width)
+    SETGEOM(height)
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
 }
 
-#undef HANDLE_COORD
+#undef SETGEOM
 
 void window_activate(xcb_window_t win)
 {
