@@ -364,16 +364,7 @@ void window_resize(xcb_window_t win)
 
 void window_activate(xcb_window_t win)
 {
-    xcb_client_message_event_t e;
-    e.response_type = XCB_CLIENT_MESSAGE;
-    e.window = win;
-    e.format = 32;
-    e.sequence = 0;
-    e.type = ewmh->_NET_ACTIVE_WINDOW;
-    e.data.data32[0] = 1;
-    e.data.data32[1] = XCB_CURRENT_TIME;
-
-    xcb_send_event(dpy, false, root, XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT, (char *) &e);
+    xcb_ewmh_request_change_active_window(ewmh, default_screen, win, XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER, XCB_CURRENT_TIME, XCB_NONE);
 }
 
 void window_id(xcb_window_t win)
