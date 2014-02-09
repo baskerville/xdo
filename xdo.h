@@ -38,7 +38,6 @@ int usage(void);
 int version(void);
 void setup(void);
 void finish(void);
-void get_atom(char *name, xcb_atom_t *atom);
 void get_active_window(xcb_window_t *win);
 bool get_class(xcb_window_t win, char *class, size_t len);
 bool get_instance(xcb_window_t win, char *instance, size_t len);

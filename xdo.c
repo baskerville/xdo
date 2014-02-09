@@ -228,16 +228,6 @@ void finish(void)
     xcb_disconnect(dpy);
 }
 
-void get_atom(char *name, xcb_atom_t *atom)
-{
-    xcb_intern_atom_reply_t *reply = xcb_intern_atom_reply(dpy, xcb_intern_atom(dpy, 0, strlen(name), name), NULL);
-    if (reply != NULL)
-        *atom = reply->atom;
-    else
-        err("Could not allocate atom: '%s'.\n", name);
-    free(reply);
-}
-
 void get_active_window(xcb_window_t *win)
 {
     if (xcb_ewmh_get_active_window_reply(ewmh, xcb_ewmh_get_active_window(ewmh, default_screen), win, NULL) != 1)
@@ -283,19 +273,7 @@ bool get_current_desktop(uint32_t *desktop)
 
 void window_close(xcb_window_t win)
 {
-    xcb_client_message_event_t e;
-    xcb_atom_t atom;
-    get_atom("WM_DELETE_WINDOW", &atom);
-
-    e.response_type = XCB_CLIENT_MESSAGE;
-    e.window = win;
-    e.format = 32;
-    e.sequence = 0;
-    e.type = ewmh->WM_PROTOCOLS;
-    e.data.data32[0] = atom;
-    e.data.data32[1] = XCB_CURRENT_TIME;
-
-    xcb_send_event(dpy, false, win, XCB_EVENT_MASK_NO_EVENT, (char *) &e);
+    xcb_ewmh_request_close_window(ewmh, default_screen, win, XCB_CURRENT_TIME, XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER);
 }
 
 void window_kill(xcb_window_t win)
