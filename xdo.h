@@ -17,6 +17,7 @@ typedef struct {
     value_cmp_t desktop;
     char *class_name;
     char *instance_name;
+    char *wm_name;
     char *x;
     char *y;
     char *width;
@@ -41,6 +42,7 @@ void finish(void);
 void get_active_window(xcb_window_t *win);
 bool get_class(xcb_window_t win, char *class, size_t len);
 bool get_instance(xcb_window_t win, char *instance, size_t len);
+bool get_wm_name(xcb_window_t win, char *wm_name, size_t len);
 bool get_pid(xcb_window_t win, uint32_t *pid);
 bool get_desktop(xcb_window_t win, uint32_t *desktop);
 bool get_current_desktop(uint32_t *desktop);

@@ -96,6 +96,9 @@ When options are provided, the action applies to all the children of the root wi
 *-N* 'CLASS_NAME'::
   The window has the given class name.
 
+*-a* 'WM_NAME'::
+  The window has the given wm name.
+
 *-p* 'PID'::
   The window has the given pid.
 
