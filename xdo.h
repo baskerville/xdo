@@ -25,6 +25,7 @@ typedef struct {
     uint32_t pid;
     uint8_t evt_code;
     bool symb_desks;
+    long int target;
 } config_t;
 
 xcb_connection_t *dpy;
@@ -52,6 +53,9 @@ void window_hide(xcb_window_t win);
 void window_show(xcb_window_t win);
 void window_raise(xcb_window_t win);
 void window_lower(xcb_window_t win);
+void window_stack(xcb_window_t win, uint32_t mode);
+void window_above(xcb_window_t win);
+void window_below(xcb_window_t win);
 void window_move(xcb_window_t win);
 void window_resize(xcb_window_t win);
 void window_activate(xcb_window_t win);

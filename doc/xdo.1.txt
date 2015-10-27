@@ -43,6 +43,12 @@ Actions
 *lower*::
   Lower the window.
 
+*below*::
+  Put the window below the target (see *-t*).
+
+*above*::
+  Put the window above the target (see *-t*).
+
 *move*::
   Move the window.
 
@@ -98,6 +104,9 @@ When options are provided, the action applies to all the children of the root wi
 
 *-a* 'WM_NAME'::
   The window has the given wm name.
+
+*-t* 'WID'::
+  The target window for the *below* and *above* actions.
 
 *-p* 'PID'::
   The window has the given pid.

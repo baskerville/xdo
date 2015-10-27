@@ -39,6 +39,10 @@ int main(int argc, char *argv[])
         action = window_raise;
     else if (strcmp(argv[1], "lower") == 0)
         action = window_lower;
+    else if (strcmp(argv[1], "below") == 0)
+        action = window_below;
+    else if (strcmp(argv[1], "above") == 0)
+        action = window_above;
     else if (strcmp(argv[1], "key") == 0)
         action = key_press_release;
     else if (strcmp(argv[1], "button") == 0)
@@ -53,7 +57,7 @@ int main(int argc, char *argv[])
     init();
     argc--, argv++;
     char opt;
-    while ((opt = getopt(argc, argv, "rcCdDn:N:a:p:k:sx:y:h:w:")) != -1) {
+    while ((opt = getopt(argc, argv, "rcCdDsn:N:a:p:k:t:x:y:h:w:")) != -1) {
         switch (opt) {
             case 'r':
                 cfg.wid = VALUE_DIFFERENT;
@@ -81,6 +85,9 @@ int main(int argc, char *argv[])
                 break;
             case 'p':
                 cfg.pid = atoi(optarg);
+                break;
+            case 't':
+                cfg.target = strtol(optarg, NULL, 0);
                 break;
             case 'k':
                 cfg.evt_code = atoi(optarg);
@@ -318,6 +325,23 @@ void window_lower(xcb_window_t win)
 {
     uint32_t values[] = {XCB_STACK_MODE_BELOW};
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
+}
+
+void window_stack(xcb_window_t win, uint32_t mode)
+{
+	uint16_t mask = XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE;
+	uint32_t values[] = {cfg.target, mode};
+	xcb_configure_window(dpy, win, mask, values);
+}
+
+void window_above(xcb_window_t win)
+{
+	window_stack(win, XCB_STACK_MODE_ABOVE);
+}
+
+void window_below(xcb_window_t win)
+{
+	window_stack(win, XCB_STACK_MODE_BELOW);
 }
 
 #define SETGEOM(v) \
