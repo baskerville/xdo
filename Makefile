@@ -1,35 +1,27 @@
 NAME    = xdo
-VERSION = 0.3
+VERSION = $(shell git describe || cat VERSION)
 
-CC      ?= gcc
-LIBS     = -lm -lxcb -lxcb-icccm -lxcb-ewmh -lxcb-xtest
-CFLAGS  += -std=c99 -pedantic -Wall -Wextra -I$(PREFIX)/include
-CFLAGS  += -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
-LDFLAGS += -L$(PREFIX)/lib
+CPPFLAGS += -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
+CFLAGS   += -std=c99 -pedantic -Wall -Wextra
+LDLIBS    = -lxcb -lxcb-icccm -lxcb-ewmh -lxcb-xtest
 
 PREFIX    ?= /usr/local
-BINPREFIX  = $(PREFIX)/bin
-MANPREFIX  = $(PREFIX)/share/man
+BINPREFIX ?= $(PREFIX)/bin
+MANPREFIX ?= $(PREFIX)/share/man
 
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 
-all: CFLAGS += -Os
-all: LDFLAGS += -s
 all: $(NAME)
 
-debug: CFLAGS += -O0 -g -DDEBUG
+debug: CFLAGS += -O0 -g
 debug: $(NAME)
 
 include Sourcedeps
 
 $(OBJ): Makefile
 
-.c.o:
-	$(CC) $(CFLAGS) -c -o $@ $<
-
 $(NAME): $(OBJ)
-	$(CC) -o $@ $(OBJ) $(LDFLAGS) $(LIBS)
 
 install:
 	mkdir -p "$(DESTDIR)$(BINPREFIX)"
@@ -40,9 +32,6 @@ install:
 uninstall:
 	rm -f "$(DESTDIR)$(BINPREFIX)/$(NAME)"
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/$(NAME).1
-
-deps:
-	$(CC) -MM *.c > Sourcedeps
 
 doc:
 	a2x -v -d manpage -f manpage -a revnumber=$(VERSION) doc/$(NAME).1.txt
