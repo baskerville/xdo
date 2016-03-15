@@ -1,16 +1,17 @@
-NAME    = xdo
-VERSION = $(shell git describe || cat VERSION)
+NAME    := xdo
+VERCMD  ?= git describe 2> /dev/null
+VERSION := $(shell $(VERCMD) || cat VERSION)
 
 CPPFLAGS += -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
 CFLAGS   += -std=c99 -pedantic -Wall -Wextra
-LDLIBS    = -lxcb -lxcb-icccm -lxcb-ewmh -lxcb-xtest
+LDLIBS   := -lxcb -lxcb-icccm -lxcb-ewmh -lxcb-xtest
 
 PREFIX    ?= /usr/local
 BINPREFIX ?= $(PREFIX)/bin
 MANPREFIX ?= $(PREFIX)/share/man
 
-SRC = $(wildcard *.c)
-OBJ = $(SRC:.c=.o)
+SRC := $(wildcard *.c)
+OBJ := $(SRC:.c=.o)
 
 all: $(NAME)
 
