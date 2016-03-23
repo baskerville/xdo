@@ -388,7 +388,7 @@ void window_activate(xcb_window_t win)
 
 void window_id(xcb_window_t win)
 {
-    printf("0x%X\n", win);
+    printf("0x%08X\n", win);
 }
 
 void window_pid(xcb_window_t win)
