@@ -150,10 +150,10 @@ Hide all the windows of the current desktop except the focused window:
 xdo hide -dr
 ----
 
-Activate the window which ID is 0x800109:
+Activate the window which ID is 0x00800109:
 
 ----
-xdo activate 0x800109
+xdo activate 0x00800109
 ----
 
 Send fake key press/release events with keycode 24 to the focused window:
