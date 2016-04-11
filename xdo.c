@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     init();
     argc--, argv++;
-    char opt;
+    int opt;
     while ((opt = getopt(argc, argv, "rcCdDsn:N:a:p:k:t:x:y:h:w:")) != -1) {
         switch (opt) {
             case 'r':
