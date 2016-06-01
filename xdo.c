@@ -139,7 +139,8 @@ int main(int argc, char *argv[])
             }
         }
     } else {
-        if (cfg.class == VALUE_IGNORE
+        if (cfg.wid == VALUE_IGNORE
+                && cfg.class == VALUE_IGNORE
                 && cfg.desktop == VALUE_IGNORE
                 && cfg.class_name == NULL
                 && cfg.instance_name == NULL
