@@ -6,26 +6,26 @@
 #define ISRELA(s)      (s[0] == '+' || s[0] == '-')
 
 typedef enum {
-    VALUE_IGNORE,
-    VALUE_SAME,
-    VALUE_DIFFERENT
+	VALUE_IGNORE,
+	VALUE_SAME,
+	VALUE_DIFFERENT
 } value_cmp_t;
 
 typedef struct {
-    value_cmp_t wid;
-    value_cmp_t class;
-    value_cmp_t desktop;
-    char *class_name;
-    char *instance_name;
-    char *wm_name;
-    char *x;
-    char *y;
-    char *width;
-    char *height;
-    uint32_t pid;
-    uint8_t evt_code;
-    bool symb_desks;
-    long int target;
+	value_cmp_t wid;
+	value_cmp_t class;
+	value_cmp_t desktop;
+	char *class_name;
+	char *instance_name;
+	char *wm_name;
+	char *x;
+	char *y;
+	char *width;
+	char *height;
+	uint32_t pid;
+	uint8_t evt_code;
+	bool symb_desks;
+	long int target;
 } config_t;
 
 xcb_connection_t *dpy;
