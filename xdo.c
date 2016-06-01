@@ -153,19 +153,7 @@ int main(int argc, char *argv[])
                 hits++;
             }
         } else {
-            xcb_query_tree_reply_t *qtr = xcb_query_tree_reply(dpy, xcb_query_tree(dpy, root), NULL);
-            if (qtr == NULL)
-                err("Failed to query the window tree.\n");
-            int len = xcb_query_tree_children_length(qtr);
-            xcb_window_t *wins = xcb_query_tree_children(qtr);
-            for (int i = 0; i < len; i++) {
-                xcb_window_t w = wins[i];
-                if (match(w, win, desktop, class)) {
-                    (*action)(w);
-                    hits++;
-                }
-            }
-            free(qtr);
+            apply(action, root, win, desktop, class, &hits);
         }
     }
 
@@ -174,6 +162,26 @@ int main(int argc, char *argv[])
         return EXIT_SUCCESS;
     else
         return EXIT_FAILURE;
+}
+
+void apply(void (*action)(xcb_window_t), xcb_window_t parent, xcb_window_t win, uint32_t desktop, char* class, int* hits)
+{
+    xcb_query_tree_reply_t *qtr = xcb_query_tree_reply(dpy, xcb_query_tree(dpy, parent), NULL);
+    if (qtr == NULL) {
+        warn("Failed to query the window tree.\n");
+        return;
+    }
+    int len = xcb_query_tree_children_length(qtr);
+    xcb_window_t *wins = xcb_query_tree_children(qtr);
+    for (int i = 0; i < len; i++) {
+        xcb_window_t w = wins[i];
+        if (match(w, win, desktop, class)) {
+            (*action)(w);
+            (*hits)++;
+        }
+        apply(action, w, win, desktop, class, hits);
+    }
+    free(qtr);
 }
 
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class)

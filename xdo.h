@@ -34,6 +34,7 @@ xcb_window_t root;
 xcb_ewmh_connection_t *ewmh;
 config_t cfg;
 
+void apply(void (*action)(xcb_window_t), xcb_window_t parent, xcb_window_t win, uint32_t desktop, char* class, int* hits);
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class);
 void init(void);
 int usage(void);
