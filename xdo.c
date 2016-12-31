@@ -292,7 +292,7 @@ bool get_wm_name(xcb_window_t win, char *wm_name, size_t len)
 {
 	xcb_icccm_get_text_property_reply_t itr;
 	if (xcb_icccm_get_wm_name_reply(dpy, xcb_icccm_get_wm_name(dpy, win), &itr, NULL) == 1) {
-		strncpy(wm_name, itr.name, len);
+		strncpy(wm_name, itr.name, MIN(len, itr.name_len));
 		return true;
 	} else {
 		return false;
