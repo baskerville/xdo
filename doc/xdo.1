@@ -2,12 +2,12 @@
 .\"     Title: xdo
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
-.\"      Date: 01/05/2017
+.\"      Date: 01/29/2017
 .\"    Manual: Xdo Manual
 .\"    Source: Xdo 0.5.4
 .\"  Language: English
 .\"
-.TH "XDO" "1" "01/05/2017" "Xdo 0\&.5\&.4" "Xdo Manual"
+.TH "XDO" "1" "01/29/2017" "Xdo 0\&.5\&.4" "Xdo Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -106,14 +106,19 @@ Print the window\(cqs ID\&.
 Print the window\(cqs pid\&.
 .RE
 .PP
-\fBkey\fR
+\fBkey_press\fR, \fBkey_release\fR
 .RS 4
 Simulate a key press/release event\&.
 .RE
 .PP
-\fBbutton\fR
+\fBbutton_press\fR, \fBbutton_release\fR
 .RS 4
 Simulate a button press/release event\&.
+.RE
+.PP
+\fBpointer_motion\fR
+.RS 4
+Simulate a pointer motion event\&.
 .RE
 .PP
 \fB\-h\fR
@@ -186,9 +191,11 @@ The window has the given pid\&.
 \fB\-k\fR \fICODE\fR
 .RS 4
 Use the given code for the
-\fBkey\fR
+\fBkey_press\fR,
+\fBkey_release\fR,
+\fBbutton_press\fR
 and
-\fBbutton\fR
+\fBbutton_release\fR
 actions\&.
 .RE
 .PP
@@ -196,6 +203,8 @@ actions\&.
 .RS 4
 Window x coordinate (or delta) for the
 \fBmove\fR
+and
+\fBpointer_motion\fR
 action\&.
 .RE
 .PP
@@ -203,6 +212,8 @@ action\&.
 .RS 4
 Window y coordinate (or delta) for the
 \fBmove\fR
+and
+\fBpointer_motion\fR
 action\&.
 .RE
 .PP
@@ -274,13 +285,13 @@ xdo activate 0x00800109
 .RE
 .\}
 .sp
-Send fake key press/release events with keycode 24 to the focused window:
+Send fake key press/release events with keycode 46 to the focused window:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-xdo key \-k 24
+xdo key_press \-k 46; sleep 0\&.2; xdo key_release \-k 46
 .fi
 .if n \{\
 .RE

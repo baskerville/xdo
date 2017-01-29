@@ -64,11 +64,16 @@ Actions
 *pid*::
   Print the window's pid.
 
-*key*::
+*key_press*::
+*key_release*::
   Simulate a key press/release event.
 
-*button*::
+*button_press*::
+*button_release*::
   Simulate a button press/release event.
+
+*pointer_motion*::
+  Simulate a pointer motion event.
 
 *-h*::
   Print the synopsis and exit.
@@ -112,13 +117,13 @@ When options are provided, the action applies to all the children of the root wi
   The window has the given pid.
 
 *-k* 'CODE'::
-  Use the given code for the *key* and *button* actions.
+  Use the given code for the *key_press*, *key_release*, *button_press* and *button_release* actions.
 
 *-x* '[±]PIXELS'::
-  Window x coordinate (or delta) for the *move* action.
+  Window x coordinate (or delta) for the *move* and *pointer_motion* action.
 
 *-y* '[±]PIXELS'::
-  Window y coordinate (or delta) for the *move* action.
+  Window y coordinate (or delta) for the *move* and *pointer_motion* action.
 
 *-w* '[±]PIXELS'::
   Window width (or delta) for the *resize* action.
@@ -156,10 +161,10 @@ Activate the window which ID is 0x00800109:
 xdo activate 0x00800109
 ----
 
-Send fake key press/release events with keycode 24 to the focused window:
+Send fake key press/release events with keycode 46 to the focused window:
 
 ----
-xdo key -k 24
+xdo key_press -k 46; sleep 0.2; xdo key_release -k 46
 ----
 
 ////

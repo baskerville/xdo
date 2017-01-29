@@ -44,10 +44,16 @@ int main(int argc, char *argv[])
 		action = window_below;
 	} else if (strcmp(argv[1], "above") == 0) {
 		action = window_above;
-	} else if (strcmp(argv[1], "key") == 0) {
-		action = key_press_release;
-	} else if (strcmp(argv[1], "button") == 0) {
-		action = button_press_release;
+	} else if (strcmp(argv[1], "key_press") == 0) {
+		action = key_press;
+	} else if (strcmp(argv[1], "key_release") == 0) {
+		action = key_release;
+	} else if (strcmp(argv[1], "button_press") == 0) {
+		action = button_press;
+	} else if (strcmp(argv[1], "button_release") == 0) {
+		action = button_release;
+	} else if (strcmp(argv[1], "pointer_motion") == 0) {
+		action = pointer_motion;
 	} else if (strcmp(argv[1], "-h") == 0) {
 		return usage();
 	} else if (strcmp(argv[1], "-v") == 0) {
@@ -119,6 +125,17 @@ int main(int argc, char *argv[])
 
 	int hits = 0;
 	xcb_window_t win = XCB_NONE;
+
+	if (action == key_press ||
+	    action == key_release ||
+	    action == button_press ||
+	    action == button_release ||
+	    action == pointer_motion) {
+	    hits = 1;
+	    (*action)(win);
+	    goto end;
+	}
+
 	char class[MAXLEN] = {0};
 	uint32_t desktop = 0;
 	if (cfg.wid != VALUE_IGNORE || cfg.class != VALUE_IGNORE) {
@@ -162,6 +179,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+end:
 	finish();
 	if (hits > 0) {
 		return EXIT_SUCCESS;
@@ -426,14 +444,34 @@ void fake_input(xcb_window_t win, uint8_t evt, uint8_t code)
 	xcb_test_fake_input(dpy, evt, code, XCB_CURRENT_TIME, win, 0, 0, 0);
 }
 
-void key_press_release(xcb_window_t win)
+void fake_motion(xcb_window_t win, uint8_t rel, uint16_t x, uint16_t y)
+{
+	xcb_test_fake_input(dpy, XCB_MOTION_NOTIFY, rel, XCB_CURRENT_TIME, win, x, y, 0);
+}
+
+void key_press(xcb_window_t win)
 {
 	fake_input(win, XCB_KEY_PRESS, cfg.evt_code);
+}
+
+void key_release(xcb_window_t win)
+{
 	fake_input(win, XCB_KEY_RELEASE, cfg.evt_code);
 }
 
-void button_press_release(xcb_window_t win)
+void button_press(xcb_window_t win)
 {
 	fake_input(win, XCB_BUTTON_PRESS, cfg.evt_code);
+}
+
+void button_release(xcb_window_t win)
+{
 	fake_input(win, XCB_BUTTON_RELEASE, cfg.evt_code);
+}
+
+void pointer_motion(xcb_window_t win)
+{
+	uint16_t x = atoi(cfg.x);
+	uint16_t y = atoi(cfg.y);
+	fake_motion(win, ISRELA(cfg.x) || ISRELA(cfg.y), x, y);
 }
