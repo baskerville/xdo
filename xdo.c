@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_ewmh.h>
+#include <xcb/xcb_aux.h>
 #include <xcb/xtest.h>
 #include "helpers.h"
 #include "xdo.h"
@@ -271,7 +272,7 @@ void setup(void)
 
 void finish(void)
 {
-	xcb_flush(dpy);
+	xcb_aux_sync(dpy);
 	xcb_ewmh_connection_wipe(ewmh);
 	free(ewmh);
 	xcb_disconnect(dpy);
