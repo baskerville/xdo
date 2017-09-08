@@ -25,6 +25,7 @@ typedef struct {
 	uint32_t pid;
 	uint8_t evt_code;
 	bool symb_desks;
+	bool wait_match;
 	long int target;
 } config_t;
 

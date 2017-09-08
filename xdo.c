@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <errno.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_ewmh.h>
@@ -10,6 +11,8 @@
 #include <xcb/xtest.h>
 #include "helpers.h"
 #include "xdo.h"
+
+const struct timespec wait_interval = {0, 1e8}; // 100 ms
 
 int main(int argc, char *argv[])
 {
@@ -66,7 +69,7 @@ int main(int argc, char *argv[])
 	init();
 	argc--, argv++;
 	int opt;
-	while ((opt = getopt(argc, argv, "rcCdDsn:N:a:p:k:t:x:y:h:w:")) != -1) {
+	while ((opt = getopt(argc, argv, "rcCdDsmn:N:a:p:k:t:x:y:h:w:")) != -1) {
 		switch (opt) {
 			case 'r':
 				cfg.wid = VALUE_DIFFERENT;
@@ -103,6 +106,9 @@ int main(int argc, char *argv[])
 				break;
 			case 's':
 				cfg.symb_desks = true;
+				break;
+			case 'm':
+				cfg.wait_match = true;
 				break;
 			case 'x':
 				cfg.x = optarg;
@@ -149,6 +155,7 @@ int main(int argc, char *argv[])
 		get_current_desktop(&desktop);
 	}
 
+loop:
 	if (num > 0) {
 		char *end;
 		for (int i = 0; i < num; i++) {
@@ -178,6 +185,11 @@ int main(int argc, char *argv[])
 		} else {
 			apply(action, root, win, desktop, class, &hits);
 		}
+	}
+
+	if (cfg.wait_match && hits == 0) {
+		nanosleep(&wait_interval, NULL);
+		goto loop;
 	}
 
 end:
@@ -238,7 +250,7 @@ void init(void)
 	cfg.x = cfg.y = cfg.width = cfg.height = NULL;
 	cfg.pid = 0;
 	cfg.evt_code = XCB_NONE;
-	cfg.symb_desks = false;
+	cfg.symb_desks = cfg.wait_match = false;
 }
 
 int usage(void)

@@ -131,6 +131,9 @@ When options are provided, the action applies to all the children of the root wi
 *-h* '[±]PIXELS'::
   Window height (or delta) for the *resize* action.
 
+*-m*::
+  Wait for the existence of a matching window.
+
 *-s*::
   Handle symbolic desktop numbers.
 
