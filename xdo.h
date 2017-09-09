@@ -29,11 +29,14 @@ typedef struct {
 	long int target;
 } config_t;
 
+const struct timespec wait_interval = {0, 1e8}; // 100 ms
+
 xcb_connection_t *dpy;
 int default_screen;
 xcb_window_t root;
 xcb_ewmh_connection_t *ewmh;
 config_t cfg;
+bool running;
 
 void apply(void (*action)(xcb_window_t), xcb_window_t parent, xcb_window_t win, uint32_t desktop, char* class, int* hits);
 bool match(xcb_window_t w, xcb_window_t win, uint32_t desktop, char* class);
@@ -42,6 +45,7 @@ int usage(void);
 int version(void);
 void setup(void);
 void finish(void);
+void handle_signal(int sig);
 void get_active_window(xcb_window_t *win);
 bool get_class(xcb_window_t win, char *class, size_t len);
 bool get_instance(xcb_window_t win, char *instance, size_t len);

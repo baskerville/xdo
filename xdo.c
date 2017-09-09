@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <signal.h>
 #include <errno.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_ewmh.h>
@@ -11,8 +12,6 @@
 #include <xcb/xtest.h>
 #include "helpers.h"
 #include "xdo.h"
-
-const struct timespec wait_interval = {0, 1e8}; // 100 ms
 
 int main(int argc, char *argv[])
 {
@@ -130,6 +129,14 @@ int main(int argc, char *argv[])
 
 	setup();
 
+	struct sigaction sa;
+	sa.sa_handler = &handle_signal;
+	sa.sa_flags = SA_RESTART;
+	sigfillset(&sa.sa_mask);
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGHUP, &sa, NULL);
+
 	int hits = 0;
 	xcb_window_t win = XCB_NONE;
 
@@ -155,41 +162,45 @@ int main(int argc, char *argv[])
 		get_current_desktop(&desktop);
 	}
 
-loop:
-	if (num > 0) {
-		char *end;
-		for (int i = 0; i < num; i++) {
-			errno = 0;
-			long int w = strtol(args[i], &end, 0);
-			if (errno != 0 || *end != '\0') {
-				warn("Invalid window ID: '%s'.\n", args[i]);
-			} else if (match(w, win, desktop, class)) {
-				(*action)(w);
-				hits++;
-			}
-		}
-	} else {
-		if (cfg.wid == VALUE_IGNORE &&
-		    cfg.class == VALUE_IGNORE &&
-		    cfg.desktop == VALUE_IGNORE &&
-		    cfg.class_name == NULL &&
-		    cfg.instance_name == NULL &&
-		    cfg.wm_name == NULL &&
-		    cfg.pid == 0) {
-			xcb_window_t win;
-			get_active_window(&win);
-			if (win != XCB_NONE) {
-				(*action)(win);
-				hits++;
+	running = true;
+
+	while (running) {
+		if (num > 0) {
+			char *end;
+			for (int i = 0; i < num; i++) {
+				errno = 0;
+				long int w = strtol(args[i], &end, 0);
+				if (errno != 0 || *end != '\0') {
+					warn("Invalid window ID: '%s'.\n", args[i]);
+				} else if (match(w, win, desktop, class)) {
+					(*action)(w);
+					hits++;
+				}
 			}
 		} else {
-			apply(action, root, win, desktop, class, &hits);
+			if (cfg.wid == VALUE_IGNORE &&
+				cfg.class == VALUE_IGNORE &&
+				cfg.desktop == VALUE_IGNORE &&
+				cfg.class_name == NULL &&
+				cfg.instance_name == NULL &&
+				cfg.wm_name == NULL &&
+				cfg.pid == 0) {
+				xcb_window_t win;
+				get_active_window(&win);
+				if (win != XCB_NONE) {
+					(*action)(win);
+					hits++;
+				}
+			} else {
+				apply(action, root, win, desktop, class, &hits);
+			}
 		}
-	}
 
-	if (cfg.wait_match && hits == 0) {
-		nanosleep(&wait_interval, NULL);
-		goto loop;
+		if (cfg.wait_match && hits == 0) {
+			nanosleep(&wait_interval, NULL);
+		} else {
+			break;
+		}
 	}
 
 end:
@@ -288,6 +299,13 @@ void finish(void)
 	xcb_ewmh_connection_wipe(ewmh);
 	free(ewmh);
 	xcb_disconnect(dpy);
+}
+
+void handle_signal(int sig)
+{
+	if (sig == SIGTERM || sig == SIGINT || sig == SIGHUP) {
+		running = false;
+	}
 }
 
 void get_active_window(xcb_window_t *win)
