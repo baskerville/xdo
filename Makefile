@@ -2,7 +2,7 @@ NAME    := xdo
 VERCMD  ?= git describe 2> /dev/null
 VERSION := $(shell $(VERCMD) || cat VERSION)
 
-CPPFLAGS += -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
+CPPFLAGS += -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\"
 CFLAGS   += -std=c99 -pedantic -Wall -Wextra
 LDLIBS   := -lxcb -lxcb-util -lxcb-icccm -lxcb-ewmh -lxcb-xtest
 
