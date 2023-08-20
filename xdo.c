@@ -502,6 +502,8 @@ void button_release(xcb_window_t win)
 
 void pointer_motion(xcb_window_t win)
 {
+	if (cfg.x == NULL || cfg.y == NULL)
+		err("pointer_motion requires x and y argument\n");
 	uint16_t x = atoi(cfg.x);
 	uint16_t y = atoi(cfg.y);
 	fake_motion(win, ISRELA(cfg.x) || ISRELA(cfg.y), x, y);
